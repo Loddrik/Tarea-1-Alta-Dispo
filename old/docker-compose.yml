@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: hola123
+      POSTGRES_USER: thisuser
+      POSTGRES_DB: resennas
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: thisuser
+      DB_PASS: hola123
+      DB_NAME: resennas
+    depends_on:
+      - db
