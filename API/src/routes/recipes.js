@@ -4,7 +4,7 @@ const Recipe = require('../models/Recipe');
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipes = express.Router()
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?maxPoolSize=20&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?maxPoolSize=20&w=majority`;
 
 recipes.get('/recipe', async (req, res) => {
     await mongoose.connect(uri, {

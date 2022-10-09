@@ -5,7 +5,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 const users = express.Router()
 
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?maxPoolSize=20&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?maxPoolSize=20&w=majority`;
 
 users.get('/user', async (req, res) => {
     await mongoose.connect(uri, {
