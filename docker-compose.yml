@@ -10,9 +10,9 @@ services:
       DB_NAME: test 
       DB_USER: loddrik
       DB_PASS: 1234
-  #front:
-  #  build: ./front
-  #  ports:
-      # - 8080:8080
-    # depends_on:
-      # - api
+  front:
+    build: ./recipe-app-1
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
