@@ -3,10 +3,8 @@ const express = require('express');
 const Recipe = require('../models/Recipe');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-
 const recipes = express.Router()
-const uri =
-    "mongodb://localhost:27017/ReseñaCocina?maxPoolSize=20&w=majority";
+const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?maxPoolSize=20&w=majority`;
 
 recipes.get('/recipe', async (req, res) => {
     await mongoose.connect(uri, {

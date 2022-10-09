@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  api:
+    build: ./API
+    ports:
+      - 3001:3001
+    environment:
+      DB_HOST: cluster0.z7xjr.mongodb.net
+      DB_NAME: test 
+      DB_USER: loddrik
+      DB_PASS: 1234
+  #front:
+  #  build: ./front
+  #  ports:
+      # - 8080:8080
+    # depends_on:
+      # - api
