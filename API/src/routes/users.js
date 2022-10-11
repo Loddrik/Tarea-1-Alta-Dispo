@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('../models/User');
+const db = require('../models/index');
 const User = require('../models/User');
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -11,7 +11,7 @@ users.get('/user', async (req, res) => {
     const users = await User.find();
     res.send(users);
 
-    db.disconnect()
+
 });
 
 users.get('/user/:id', async (req, res) => {
@@ -20,7 +20,7 @@ users.get('/user/:id', async (req, res) => {
     const user = await User.findById(new ObjectId(req.params.id));
     res.send(user);
 
-    db.disconnect()
+
 });
 
 users.post('/user', async (req, res) => {
@@ -31,16 +31,16 @@ users.post('/user', async (req, res) => {
 
     res.send(user);
 
-    db.disconnect()
+
 });
 
 users.put('/user/:id', async (req, res) => {
     db.connect()
-    
+
     const user = await User.findByIdAndUpdate(req.params.id, req.body);
     res.send(user);
 
-    db.disconnect()
+
 });
 
 users.delete('/user/:id', async (req, res) => {
@@ -49,7 +49,7 @@ users.delete('/user/:id', async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
     res.send(user);
 
-    db.disconnect()
+
 });
 
 module.exports = users;
