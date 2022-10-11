@@ -1,21 +1,24 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const users = require("./routes/users");
+const express = require('express');
+const morgan  = require('morgan'); 
+const cors    = require('cors');
+
+const routes = require('./routes');
 const recipes = require("./routes/recipes");
+const users   = require("./routes/users");
 
 const app = express();
-app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    })
-);
 
-app.use(bodyParser.json());
+/** Express Config */
+app.use( express.urlencoded({ extended: true }) );
+app.use(express.json());
+app.use(morgan('dev'));
 app.use(cors());
 
-app.get("/", async (req, res) => { res.status(200).send({ message: "olakace"})})
-app.use("/user", users);
-app.use("/recipe", recipes);
+/** Routes Config */
+app.use("/", routes);
 
-app.listen(3001, () => console.log(`API corriendo (mela) en el puorto 😈💦  : 8080.`) );
+//app.use("/user", users);
+//app.use("/recipe", recipes);
+
+const PORT = process.env.PORT ?? 3001;
+app.listen(PORT, () => console.log(`API corriendo (mela) en el puorto 😈💦  : ${PORT}.`) );
