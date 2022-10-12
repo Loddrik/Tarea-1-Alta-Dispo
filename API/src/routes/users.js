@@ -5,30 +5,28 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 const users = express.Router()
 
-users.get('/user', async (req, res) => {
+users.get('/users', async (req, res) => {
     db.connect()
-
     const users = await User.find();
     res.send(users);
-
-
 });
 
-users.get('/user/:id', async (req, res) => {
+users.get('/getById/:id', async (req, res) => {
     db.connect()
-
     const user = await User.findById(new ObjectId(req.params.id));
     res.send(user);
-
-
 });
 
-users.post('/user', async (req, res) => {
+users.get('/getByEmail/:email', async (req, res) => {
     db.connect()
+    const user = await User.find({ email: req.params.email })
+    res.send(user);
+});
 
+users.post('/', async (req, res) => {
+    db.connect()
     const user = new User(req.body);
     await user.save();
-
     res.send(user);
 
 
