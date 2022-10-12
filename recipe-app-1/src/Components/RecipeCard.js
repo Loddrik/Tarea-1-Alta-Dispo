@@ -28,7 +28,7 @@ export default function RecipeCard(props) {
             <CardMedia
                 component="img"
                 height="194"
-                image="/static/images/cards/paella.jpg"
+                image='https://p.kindpng.com/picc/s/79-798754_hoteles-y-centros-vacacionales-dish-placeholder-hd-png.png'
                 alt="Paella dish"
             />
             <CardContent>

@@ -6,24 +6,26 @@ import { Paper } from '@mui/material';
 
 
 
+
 export const Recipes = () => {
-    const fetch_products = async () => {
-        await fetch('http://localhost:3001/recipe/recipe', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json',
-            },
-        })
-            .then((res) => res.json())
-            .then(json => {
-                setRecipes(json)
-            })
-    }
+
     const [recipes, setRecipes] = useState([])
 
     useEffect(() => {
-        fetch_products()
+        const fetch_products = async () => {
+            await fetch('http://localhost:3001/recipe/recipe', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
+                },
+            })
+                .then((res) => res.json())
+                .then(json => {
+                    setRecipes(json)
+                })
+        }
+        fetch_products();
     }, [])
     return (
         <Grid direction={"column"} alignItems={"center"} spacing={3} container >
