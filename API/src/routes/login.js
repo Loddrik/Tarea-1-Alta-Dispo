@@ -8,7 +8,7 @@ const User = require('../models/User');
 const login = express.Router()
 
 login.post("/login", async (req, res) => {
-    db.connect();
+    await db.connect();
 
     const { email, password } = req.body;
     const userWithEmail = await User.findOne({ email:  email }).catch( (err) => {

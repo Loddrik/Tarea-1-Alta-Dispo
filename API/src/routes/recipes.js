@@ -3,7 +3,7 @@ const passport = require('passport');
 
 const Recipe = require('../models/Recipe');
 var ObjectId = require('mongoose').Types.ObjectId;
-const db = require('../models/index')
+const db = require('../models')
 
 const recipes = express.Router()
 
@@ -37,7 +37,7 @@ recipes.post('/recipe', async (req, res) => {
 }
 );
 recipes.put('/recipe/:id', passport.authenticate("jwt", { session: false }), async (req, res) => {
-    db.connect();
+    await db.connect();
 
     const recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body);
     res.send(recipe);
