@@ -24,9 +24,9 @@ recipes.get('/recipe/:id', async (req, res) => {
 
 }
 );
-recipes.post('/recipe', async (req, res) => {
+recipes.post('/', async (req, res) => {
     db.connect();
-
+    console.log(req.body)
     const recipe = new Recipe(req.body);
     await recipe.save();
     res.send(recipe);
@@ -34,7 +34,7 @@ recipes.post('/recipe', async (req, res) => {
 
 }
 );
-recipes.put('/recipe/:id', async (req, res) => {
+recipes.put('/:id', async (req, res) => {
     db.connect();
 
     const recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body);
@@ -43,7 +43,7 @@ recipes.put('/recipe/:id', async (req, res) => {
 
 }
 );
-recipes.delete('/recipe/:id', async (req, res) => {
+recipes.delete('/:id', async (req, res) => {
     db.connect();
 
     const recipe = await Recipe.findByIdAndDelete(req.params.id);
