@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan  = require('morgan'); 
 const cors    = require('cors');
+require('./auth/passport');
+
 
 const routes = require('./routes');
 const recipes = require("./routes/recipes");
