@@ -7,14 +7,16 @@ const recipeSchema = new Schema({
         required: true,
     },
     author: {
+        type: String,
+        required: true,
+    },
+    author_id: {
         type: SchemaTypes.ObjectId,
         ref: 'User',
-        required: true,
     },
     comments: [{
         user: {
-            type: SchemaTypes.ObjectId,
-            ref: 'User',
+            type: String,
         },
         content: String,
     }]
@@ -23,6 +25,7 @@ const recipeSchema = new Schema({
         type: String,
         required: true,
     }
+
 });
 
 const Recipe = model('Recipe', recipeSchema);

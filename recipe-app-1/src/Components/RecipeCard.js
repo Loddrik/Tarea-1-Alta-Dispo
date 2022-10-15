@@ -6,24 +6,41 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Avatar, CardHeader, IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ThrashIcon from '@mui/icons-material/Delete';
 import { red } from '@mui/material/colors';
+import AppContext from '../Context/AppContext';
+import Delete from '@mui/icons-material/Delete';
+import { DeleteRecipe } from '../func/recipeFunc';
+
+
+
 
 export default function RecipeCard(props) {
+    const { user } = React.useContext(AppContext)
+    console.log(props)
+
+
+
     return (
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
                 avatar={
                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        {props.name[0]}
+                        {props.author[0]}
                     </Avatar>
                 }
                 action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
+                    (props.author_id === user._id) ? (
+                        <IconButton onClick={DeleteRecipe(props.author._id)}>
+                            <ThrashIcon />
+                        </IconButton>) : (
+                        <IconButton aria-label="settings">
+                            <MoreVertIcon />
+                        </IconButton>
+                    )
                 }
                 title={props.name}
-                subheader="September 14, 2016"
+                subheader={props.author}
             />
             <CardMedia
                 component="img"
@@ -32,7 +49,12 @@ export default function RecipeCard(props) {
                 alt="Paella dish"
             />
             <CardContent>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1,
+                }}>
                     {props.description}
                 </Typography>
             </CardContent>

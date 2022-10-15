@@ -6,9 +6,13 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import AppContext from '../Context/AppContext';
 
 
 export default function AppBarButton() {
+
+    const { user } = React.useContext(AppContext)
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed">
@@ -25,7 +29,17 @@ export default function AppBarButton() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Recipes
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {(user.authenticated) ? (
+                        <Button color="inherit">
+                            {`${user.name}`}
+                        </Button>
+                    ) : (
+                        <Button
+                            color="inherit"
+                            href='/SignIn'
+                        >Login</Button>
+                    )}
+
                 </Toolbar>
             </AppBar>
         </Box>

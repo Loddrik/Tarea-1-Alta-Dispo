@@ -26,9 +26,9 @@ recipes.get('/recipe/:id', async (req, res) => {
 
 }
 );
-recipes.post('/recipe', async (req, res) => {
+recipes.post('/', async (req, res) => {
     db.connect();
-
+    console.log(req.body)
     const recipe = new Recipe(req.body);
     await recipe.save();
     res.send(recipe);
@@ -45,7 +45,7 @@ recipes.put('/recipe/:id', passport.authenticate("jwt", { session: false }), asy
     db.disconnect();
 }
 );
-recipes.delete('/recipe/:id', async (req, res) => {
+recipes.delete('/:id', async (req, res) => {
     db.connect();
 
     const recipe = await Recipe.findByIdAndDelete(req.params.id);
