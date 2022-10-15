@@ -1,4 +1,6 @@
 const express = require('express');
+const passport = require('passport');
+
 const Recipe = require('../models/Recipe');
 var ObjectId = require('mongoose').Types.ObjectId;
 const db = require('../models/index')
@@ -34,13 +36,13 @@ recipes.post('/', async (req, res) => {
 
 }
 );
-recipes.put('/:id', async (req, res) => {
+recipes.put('/recipe/:id', passport.authenticate("jwt", { session: false }), async (req, res) => {
     db.connect();
 
     const recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body);
     res.send(recipe);
 
-
+    db.disconnect();
 }
 );
 recipes.delete('/:id', async (req, res) => {

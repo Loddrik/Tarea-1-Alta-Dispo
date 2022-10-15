@@ -12,6 +12,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom'
+import AppContext from '../Context/AppContext';
+
+
+
+
 
 function Copyright(props) {
     return (
@@ -26,16 +32,50 @@ function Copyright(props) {
     );
 }
 
+
+
 const theme = createTheme();
 
 export default function Login() {
-    const handleSubmit = (event) => {
+
+    const history = useNavigate();
+    const { setUser } = React.useContext(AppContext)
+
+    const [error, setError] = React.useState(false)
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const email = data.get('email');
+        const password = data.get('password');
+        await fetch(`http://localhost:3001/user/getByEmail/${email}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(res => res.json())
+            .then((data) => {
+                console.log(data)
+                if (data.length > 0) {
+                    if (data[0].password === password) {
+                        setUser({
+                            ...data[0],
+                            authenticated: true
+                        })
+                        history('/home')
+                    }
+                    else {
+                        setError(true)
+
+                    }
+                }
+                else {
+                    setError(true)
+                }
+            })
+
     };
 
     return (
@@ -66,6 +106,7 @@ export default function Login() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            error={error}
                         />
                         <TextField
                             margin="normal"
@@ -76,6 +117,8 @@ export default function Login() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            error={error}
+                            helperText={error ? "Wrong email or password" : ""}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
