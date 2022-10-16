@@ -12,6 +12,7 @@ const verifySession = async (req, res, next) => {
     const token = await jwt.verify(req.headers["session-token"], process.env.SECRET);
     if(token["id"] !== req.params.id){
         res.status(401).json({ "message": "You dont have the permision to perform this action."});
+        return
     } 
 
     next();
