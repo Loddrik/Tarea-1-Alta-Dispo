@@ -12,9 +12,9 @@ export const Recipes = (props) => {
         <div>
             {(props.recipes.length > 0) ?
                 (
-                    <Grid margin={1} container spacing={{ xs: 1, md: 2 }}  >
+                    <Grid margin={1} container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, md: 12 }}  >
                         {props.recipes.map((re, index) => (
-                            < Grid item key={index} >
+                            < Grid item key={index} xs md={"auto"}>
                                 <RecipeCard fetch_products={props.fetch_products} name={re.name} _id={re._id} author_id={re.author_id} description={re.description} author={re.author} />
                             </Grid>
                         ))}

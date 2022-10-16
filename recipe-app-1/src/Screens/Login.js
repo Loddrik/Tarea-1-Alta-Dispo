@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom'
 import AppContext from '../Context/AppContext';
+import CircularIndeterminate from '../Components/CircularIndeterminate';
 
 
 
@@ -36,12 +37,16 @@ const theme = createTheme();
 
 export default function Login() {
 
+    const [loading, setLoading] = React.useState(false);
+
     const history = useNavigate();
     const { setUser, setCookie } = React.useContext(AppContext)
     const [error, setError] = React.useState(false)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        setLoading(true)
 
         const data = new FormData(event.currentTarget);
         const email = data.get('email');
@@ -56,108 +61,112 @@ export default function Login() {
             })
         });
 
-        if( res.status != 200 ) {
-             setError(true);
-             return;
+        if (res.status != 200) {
+            setLoading(false);
+            setError(true);
+            return;
         }
 
         const body = await res.json();
         console.log(body)
-        setUser({...body["user"], authenticated: true})
-        setCookie('session-token', body["jwt"] )
+        setUser({ ...body["user"], authenticated: true })
+        setCookie('session-token', body["jwt"])
 
 
         history('/home')
-            //     if (data.length > 0) {
-            //         if (data[0].password === password) {
-            //             setUser({
-            //                 ...data[0],
-            //                 authenticated: true
-            //             })
-            
-            //         }
-            //         else {
-            //             setError(true)
+        //     if (data.length > 0) {
+        //         if (data[0].password === password) {
+        //             setUser({
+        //                 ...data[0],
+        //                 authenticated: true
+        //             })
 
-            //         }
-            //     }
-            //     else {
-            //         setError(true)
-            //     }
-            // })
+        //         }
+        //         else {
+        //             setError(true)
+
+        //         }
+        //     }
+        //     else {
+        //         setError(true)
+        //     }
+        // })
 
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            error={error}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            error={error}
-                            helperText={error ? "Wrong email or password" : ""}
-                        />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Sign In
-                        </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
+        (loading) ? (
+            <CircularIndeterminate />
+        ) : (
+            <ThemeProvider theme={theme}>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline />
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                                error={error}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                error={error}
+                                helperText={error ? "Wrong email or password" : ""}
+                            />
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary" />}
+                                label="Remember me"
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Sign In
+                            </Button>
+                            <Grid container>
+                                <Grid item xs>
+                                    <Link href="#" variant="body2">
+                                        Forgot password?
+                                    </Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link href="/SignUp" variant="body2">
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Link href="/SignUp" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
+                        </Box>
                     </Box>
-                </Box>
-                <Copyright sx={{ mt: 8, mb: 4 }} />
-            </Container>
-        </ThemeProvider>
-    );
+                    <Copyright sx={{ mt: 8, mb: 4 }} />
+                </Container>
+            </ThemeProvider>
+        ));
 }
