@@ -10,7 +10,7 @@ const { verifySession } = require('../middlewares/verifySession');
 const recipes = express.Router()
 
 recipes.get('/', async (req, res) => {
-    db.connect();
+    await db.connect();
 
     const recipes = await Recipe.find();
     res.send(recipes);

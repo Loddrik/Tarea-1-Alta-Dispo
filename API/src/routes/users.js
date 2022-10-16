@@ -23,7 +23,7 @@ users.get('/getById/:id', async (req, res) => {
 });
 
 users.get('/getByEmail/:email', async (req, res) => {
-    db.connect()
+    await db.connect();
     const user = await User.find({ email: req.params.email })
     db.disconnect();
 

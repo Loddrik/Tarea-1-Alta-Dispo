@@ -15,12 +15,11 @@ login.post("/", async (req, res) => {
         console.log(`[!] Error: ${err}`);
     });
 
-    if (!userWithEmail) return res.json({ message: "Email or pass does not match!", user: userWithEmail});
-    if (userWithEmail.password !== password) return res.json({ message: "Email or pass does not match!", user: userWithEmail});
+    if (!userWithEmail) return res.status(401).json({ message: "Email or pass does not match!", user: userWithEmail});
+    if (userWithEmail.password !== password) return res.status(401).json({ message: "Email or pass does not match!", user: userWithEmail});
 
     const jwtToken = jwt.sign({ id: userWithEmail.id, email: userWithEmail.email }, process.env.SECRET );
-    res.cookie("session-token", jwtToken);
-    res.json({ message: "Logged In Successfully!" });
+    res.json({ message: "Logged In Successfully!", "user": userWithEmail, "jwt": jwtToken });
 
     db.disconnect();
 });

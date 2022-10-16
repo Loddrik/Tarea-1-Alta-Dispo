@@ -14,9 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom'
 import AppContext from '../Context/AppContext';
-
-
-
+import { useCookies } from 'react-cookie';
 
 
 function Copyright(props) {
@@ -40,41 +38,54 @@ export default function Login() {
 
     const history = useNavigate();
     const { setUser } = React.useContext(AppContext)
+    const [cookies, setCookie] = useCookies(['session-token']);
 
     const [error, setError] = React.useState(false)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         const data = new FormData(event.currentTarget);
         const email = data.get('email');
         const password = data.get('password');
-        await fetch(`http://localhost:3001/user/getByEmail/${email}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then((data) => {
-                console.log(data)
-                if (data.length > 0) {
-                    if (data[0].password === password) {
-                        setUser({
-                            ...data[0],
-                            authenticated: true
-                        })
-                        history('/home')
-                    }
-                    else {
-                        setError(true)
 
-                    }
-                }
-                else {
-                    setError(true)
-                }
+        const res = await fetch(`http://localhost:3001/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                'email': email,
+                'password': password
             })
+        });
+
+        if( res.status != 200 ) {
+             setError(true);
+             return;
+        }
+
+        const body = await res.json();
+        console.log(body)
+        setUser({...body["user"], authenticated: true})
+        setCookie('session-token', body["jwt"] )
+
+
+            //     if (data.length > 0) {
+            //         if (data[0].password === password) {
+            //             setUser({
+            //                 ...data[0],
+            //                 authenticated: true
+            //             })
+            //             history('/home')
+            //         }
+            //         else {
+            //             setError(true)
+
+            //         }
+            //     }
+            //     else {
+            //         setError(true)
+            //     }
+            // })
 
     };
 
