@@ -7,22 +7,26 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
+import AppContext from '../Context/AppContext';
 
 
 export default function RecipeForm(props) {
 
     const [form_data, setForm_data] = React.useState({})
+    const { cookie } = React.useContext(AppContext);
     const history = useNavigate();
     const handleClose = () => {
         return props.setOpen(false);
     };
 
     const handleAddRecipe = async () => {
+        console.log(cookie);
         await fetch('http://localhost:3001/recipe/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json',
+                'session-token': cookie["session-token"]
             },
             body: JSON.stringify({ ...form_data, author: props.user.name, author_id: props.user._id })
         })

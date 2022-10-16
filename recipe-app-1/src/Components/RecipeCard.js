@@ -14,7 +14,7 @@ import AppContext from '../Context/AppContext';
 
 
 export default function RecipeCard(props) {
-    const { user } = React.useContext(AppContext)
+    const { user, cookie } = React.useContext(AppContext)
 
     const handleDelete = async () => {
         await DeleteRecipe(props._id)
@@ -27,6 +27,7 @@ export default function RecipeCard(props) {
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json',
+                'session-token': cookie["session-token"]
             },
         })
             .then((res) => res.json())
