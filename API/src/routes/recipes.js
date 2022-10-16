@@ -1,5 +1,5 @@
 const express = require('express');
-const passport = require('passport');
+// const passport = require('passport');
 
 const Recipe = require('../models/Recipe');
 var ObjectId = require('mongoose').Types.ObjectId;
@@ -21,7 +21,7 @@ recipes.get('/recipe/:id', async (req, res) => {
     db.connect()
 
     const recipe = await Recipe.findById(new ObjectId(req.params.id));
-    res.send(recipe);
+    return res.send(recipe);
 
 
 }
@@ -31,20 +31,20 @@ recipes.post('/', async (req, res) => {
     console.log(req.body)
     const recipe = new Recipe(req.body);
     await recipe.save();
-    res.send(recipe);
+    return res.send(recipe);
 
 
 }
 );
-recipes.put('/recipe/:id', passport.authenticate("jwt", { session: false }), async (req, res) => {
-    await db.connect();
+// recipes.put('/recipe/:id', passport.authenticate("jwt", { session: false }), async (req, res) => {
+//     await db.connect();
 
-    const recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body);
-    res.send(recipe);
+//     const recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body);
+//     res.send(recipe);
 
-    db.disconnect();
-}
-);
+//     db.disconnect();
+// }
+// );
 recipes.delete('/:id', async (req, res) => {
     db.connect();
 

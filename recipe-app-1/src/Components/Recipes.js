@@ -12,10 +12,10 @@ export const Recipes = (props) => {
         <div>
             {(props.recipes.length > 0) ?
                 (
-                    <Grid margin={1} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 3, sm: 6, md: 12 }} >
+                    <Grid margin={1} container spacing={{ xs: 1, md: 2 }}  >
                         {props.recipes.map((re, index) => (
-                            < Grid item key={index} xs={4} sm={6} md={6} >
-                                <RecipeCard name={re.name} _id={re._id} author_id={re.author_id} description={re.description} author={re.author} />
+                            < Grid item key={index} >
+                                <RecipeCard fetch_products={props.fetch_products} name={re.name} _id={re._id} author_id={re.author_id} description={re.description} author={re.author} />
                             </Grid>
                         ))}
                     </Grid>

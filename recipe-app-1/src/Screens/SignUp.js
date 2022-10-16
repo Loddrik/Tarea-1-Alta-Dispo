@@ -35,8 +35,40 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget)
-    registerFunc(data.get("firstName"), data.get('email'), data.get('password'))
+    const data_ = new FormData(event.currentTarget)
+    console.log(data_.get('email'), data_.get('password'))
+    await fetch(`http://localhost:3001/user/getByEmail/${data_.get('email')}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(res => res.json())
+      .then((data) => {
+        if (data.length > 0) {
+          alert("User already exist")
+        }
+        else {
+          fetch(`http://localhost:3001/user/register`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                name: data_.get('firstName'),
+                email: data_.get('email'),
+                password: data_.get('password')
+              })
+            })
+            .then(res => res.json())
+            .then((data) => {
+              console.log(data)
+              alert("User created")
+            })
+        }
+      })
   }
 
 

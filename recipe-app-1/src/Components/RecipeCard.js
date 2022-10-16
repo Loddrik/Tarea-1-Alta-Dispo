@@ -17,8 +17,25 @@ import { DeleteRecipe } from '../func/recipeFunc';
 
 export default function RecipeCard(props) {
     const { user } = React.useContext(AppContext)
-    console.log(props)
 
+    const handleDelete = async () => {
+        await DeleteRecipe(props._id)
+        props.fetch_products()
+    }
+
+    const DeleteRecipe = async (id) => {
+        await fetch(`http://localhost:3001/recipe/${id}`, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json',
+            },
+        })
+            .then((res) => res.json())
+            .then(json => {
+                return console.log(json)
+            })
+    }
 
 
     return (
@@ -31,7 +48,9 @@ export default function RecipeCard(props) {
                 }
                 action={
                     (props.author_id === user._id) ? (
-                        <IconButton onClick={DeleteRecipe(props.author._id)}>
+                        <IconButton onClick={() =>
+                            handleDelete()
+                        }>
                             <ThrashIcon />
                         </IconButton>) : (
                         <IconButton aria-label="settings">
@@ -58,6 +77,6 @@ export default function RecipeCard(props) {
                     {props.description}
                 </Typography>
             </CardContent>
-        </Card>
+        </Card >
     );
 }

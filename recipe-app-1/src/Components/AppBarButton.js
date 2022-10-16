@@ -7,11 +7,20 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppContext from '../Context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function AppBarButton() {
 
-    const { user } = React.useContext(AppContext)
+    const history = useNavigate();
+    const { user, setUser } = React.useContext(AppContext)
+    const handleLogOut = () => {
+        setUser({
+            authenticated: false,
+        })
+        history('/home');
+        console.log("assadasd")
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -30,7 +39,7 @@ export default function AppBarButton() {
                         Recipes
                     </Typography>
                     {(user.authenticated) ? (
-                        <Button color="inherit">
+                        <Button color="inherit" onClick={() => handleLogOut()}>
                             {`${user.name}`}
                         </Button>
                     ) : (

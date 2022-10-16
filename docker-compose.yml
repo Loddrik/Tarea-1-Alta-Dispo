@@ -7,13 +7,15 @@ services:
       - 3001:3001
     environment:
       DB_HOST: cluster0.z7xjr.mongodb.net
-      DB_NAME: test 
+      DB_NAME: test
       DB_USER: loddrik
       DB_PASS: 1234
       SECRET: Th1s1ssup3rs3cr3t
-  front:
-    build: ./recipe-app-1
-    ports:
-      - 3000:80
-    depends_on:
-      - api
+  # front:
+  #   build: ./recipe-app-1
+  #   ports:
+  #     - 3000:80
+  #   volumes:
+  #     - ./recipe-app-1:/app
+  #   depends_on:
+  #     - api

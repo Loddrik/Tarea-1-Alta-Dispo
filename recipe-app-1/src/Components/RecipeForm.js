@@ -14,9 +14,8 @@ export default function RecipeForm(props) {
     const [form_data, setForm_data] = React.useState({})
     const history = useNavigate();
     const handleClose = () => {
-        props.setOpen(false);
+        return props.setOpen(false);
     };
-    console.log(props)
 
     const handleAddRecipe = async () => {
         await fetch('http://localhost:3001/recipe/', {
@@ -31,7 +30,8 @@ export default function RecipeForm(props) {
             .then(json => {
                 console.log(json)
                 handleClose()
-                history('/home')
+                props.fetch_products()
+                return history('/home')
             })
 
     }
