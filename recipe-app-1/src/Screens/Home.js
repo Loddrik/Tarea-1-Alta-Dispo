@@ -15,7 +15,7 @@ const Home = () => {
     const [loading, setLoading] = React.useState(true)
 
     const fetch_products = async () => {
-        await fetch('http://localhost:3001/recipe', {
+        await fetch('http://localhost:3001/recipe/', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
