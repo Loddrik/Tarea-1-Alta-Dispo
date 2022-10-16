@@ -15,39 +15,74 @@ users.get('/', async (req, res) => {
 
 users.get('/getById/:id', async (req, res) => {
     db.connect()
-    const user = await User.findById(new ObjectId(req.params.id));
-    db.disconnect();
-    
-    if (!user) { return res.json({ message: "User not found!" }); }
-    res.send(user);
+        .then(() => {
+            User.findById(new ObjectId(req.params.id))
+                .then((user) => {
+                    if (!user) { res.json({ message: "User not found!" }); }
+                    else res.send(user);
+                    db.disconnect();
+                })
+                .catch((err) => {
+                    console.log(`[!] Error while getting user ${err}`);
+                })
+        })
+        .catch((err) => {
+            console.log(`[!] Error while connecting to DB ${err}`);
+        })
 });
+
+
 
 users.get('/getByEmail/:email', async (req, res) => {
     db.connect()
-    const user = await User.find({ email: req.params.email })
-    db.disconnect();
-
-    if (!user) { return res.json({ message: "User not found!" }); }
-    res.send(user);
+        .then(() => {
+            User.findOne({ email: req.params.email })
+                .then((user) => {
+                    if (!user) { res.json({ message: "User not found!" }); }
+                    else res.send(user);
+                    db.disconnect();
+                })
+                .catch((err) => {
+                    console.log(`[!] Error while getting user ${err}`);
+                })
+        })
+        .catch((err) => {
+            console.log(`[!] Error while connecting to DB ${err}`);
+        })
 });
+
 
 users.post('/register', async (req, res) => {
     await db.connect()
-    const { name, email, password } = req.body;
-
-    const alreadyExists = await User.findOne({ email: email })
-    if (alreadyExists) { return res.json({ message: "User with email already exists!", user: alreadyExists }); }
-
-    const user = new User({ name, email, password });
-    const savedUser = await user.save().catch((err) => {
-        console.log(`Error registering user ${err}`);
-    });
-
-    if (savedUser) return res.json({ message: "User registered." });
-    return res.json({ message: "Could not register the user." })
+        .then(() => {
+            const { name, email, password } = req.body;
+            User.findOne({ email: email })
+                .then((user) => {
+                    if (user) {
+                        res.json({ message: "User already exists!", user: user });
+                    }
+                    else {
+                        const newUser = new User({ name: name, email: email, password: password });
+                        newUser.save()
+                            .then((user) => {
+                                res.json({ message: "User created.", user: user });
+                                db.disconnect();
+                            })
+                            .catch((err) => {
+                                console.log(`[!] Error while creating user ${err}`);
+                            })
+                    }
+                })
+                .catch((err) => {
+                    console.log(`[!] Error while getting user ${err}`);
+                })
+        })
+        .catch((err) => {
+            console.log(`[!] Error while connecting to DB ${err}`);
+        })
 });
 
-users.put('/:id', verifySession ,async (req, res) => {
+users.put('/:id', verifySession, async (req, res) => {
     await db.connect()
 
     const doesntExists = await User.findOne({ id: req.params.id })
@@ -56,11 +91,10 @@ users.put('/:id', verifySession ,async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body).catch((err) => {
         console.log(`[!] Error while updating user ${err}`);
     });
+    await db.disconnect();
 
     if (updatedUser) return res.json({ message: "User registered." });
     return res.json({ message: "Could not update the user." })
-
-    await db.disconnect();
 });
 
 users.delete('/:id', verifySession, async (req, res) => {

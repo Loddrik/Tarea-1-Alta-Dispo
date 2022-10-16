@@ -10,35 +10,49 @@ const { verifySession } = require('../middlewares/verifySession');
 const recipes = express.Router()
 
 recipes.get('/', async (req, res) => {
-    db.connect();
-
-    const recipes = await Recipe.find();
-    res.send(recipes);
-
-    db.disconnect();
+    await db.connect()
+        .then(() => {
+            Recipe.find()
+                .then((recipes) => {
+                    res.send(recipes);
+                    db.disconnect();
+                })
+                .catch((err) => {
+                    console.log(`[!] Error while getting recipes ${err}`);
+                })
+        })
+        .catch((err) => {
+            console.log(`[!] Error while connecting to DB ${err}`);
+        })
 });
 
 recipes.get('/recipe/:id', async (req, res) => {
     db.connect()
     const recipe = await Recipe.findById(new ObjectId(req.params.id));
-    db.disconnect(); 
+    db.disconnect();
 
     if (!recipe) { return res.json({ message: "Recipe not found!" }); }
     return res.send(recipe);
 });
 
 recipes.post('/', verifySession, async (req, res) => {
-    db.connect();
-    const recipe = new Recipe(req.body);
-    await recipe.save();
-    db.disconnect();
+    db.connect()
+        .then(() => {
+            const recipe = new Recipe(req.body);
+            recipe.save()
+                .then((recipe) => {
+                    db.disconnect();
+                    res.json({ message: "Recipe created.", recipe: recipe });
+                })
+                .catch((err) => {
+                    console.log(`[!] Error while creating recipe ${err}`);
+                })
+        })
+        .catch((err) => {
+            console.log(`[!] Error while connecting to DB ${err}`);
+        })
+});
 
-
-    return res.send(recipe);
-
-
-}
-);
 
 recipes.put('/recipe/:id', verifySession, async (req, res) => {
     await db.connect();
@@ -51,12 +65,21 @@ recipes.put('/recipe/:id', verifySession, async (req, res) => {
 );
 
 recipes.delete('/:id', verifySession, async (req, res) => {
-    db.connect();
+    db.connect()
+        .then(() => {
+            Recipe.findByIdAndDelete(req.params.id)
+                .then((recipe) => {
+                    db.disconnect();
+                    res.json({ message: "Recipe deleted.", recipe: recipe });
+                })
+                .catch((err) => {
+                    console.log(`[!] Error while deleting recipe ${err}`);
+                })
+        })
+        .catch((err) => {
+            console.log(`[!] Error while connecting to DB ${err}`);
+        })
+});
 
-    const recipe = await Recipe.findByIdAndDelete(req.params.id);
-    res.send(recipe);
 
-
-}
-);
 module.exports = recipes;

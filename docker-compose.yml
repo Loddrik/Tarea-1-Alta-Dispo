@@ -15,7 +15,5 @@ services:
     build: ./recipe-app-1
     ports:
       - 3000:80
-    volumes:
-      - ./recipe-app-1:/app
     depends_on:
       - api

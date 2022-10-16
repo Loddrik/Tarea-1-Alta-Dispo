@@ -57,22 +57,17 @@ export default function Login() {
             })
             .then(res => res.json())
             .then((data) => {
-                console.log(data)
-                if (data.length > 0) {
-                    if (data[0].password === password) {
-                        setUser({
-                            ...data[0],
-                            authenticated: true
-                        })
-                        history('/home')
-                    }
-                    else {
-                        setError(true)
-
-                    }
+                console.log(data.password, password)
+                if (data.password === password) {
+                    setUser({
+                        ...data,
+                        authenticated: true
+                    })
+                    history('/home')
                 }
                 else {
                     setError(true)
+
                 }
             })
 
