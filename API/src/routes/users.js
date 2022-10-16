@@ -3,6 +3,8 @@ const db = require('../models/index');
 const User = require('../models/User');
 var ObjectId = require('mongoose').Types.ObjectId;
 
+const { verifySession } = require('../middlewares/verifySession');
+
 const users = express.Router()
 
 users.get('/', async (req, res) => {
@@ -13,30 +15,25 @@ users.get('/', async (req, res) => {
 
 users.get('/getById/:id', async (req, res) => {
     db.connect()
-
-    const doesntExists = await User.findOne({ id: req.params.id })
-    if (!doesntExists) { return res.json({ message: "User not found!" }); }
-
     const user = await User.findById(new ObjectId(req.params.id));
+    db.disconnect();
+    
+    if (!user) { return res.json({ message: "User not found!" }); }
     res.send(user);
 });
 
 users.get('/getByEmail/:email', async (req, res) => {
     db.connect()
-
-    const doesntExists = await User.findOne({ email: req.params.email })
-    if (!doesntExists) { return res.json({ message: "User not found!" }); }
-
     const user = await User.find({ email: req.params.email })
+    db.disconnect();
+
+    if (!user) { return res.json({ message: "User not found!" }); }
     res.send(user);
-
-
 });
 
 users.post('/register', async (req, res) => {
     await db.connect()
     const { name, email, password } = req.body;
-    console.log(name, email, password);
 
     const alreadyExists = await User.findOne({ email: email })
     if (alreadyExists) { return res.json({ message: "User with email already exists!", user: alreadyExists }); }
@@ -45,15 +42,13 @@ users.post('/register', async (req, res) => {
     const savedUser = await user.save().catch((err) => {
         console.log(`Error registering user ${err}`);
     });
-    console.log(savedUser);
+
     if (savedUser) return res.json({ message: "User registered." });
     return res.json({ message: "Could not register the user." })
-
-
 });
 
-users.put('/:id', async (req, res) => {
-    db.connect()
+users.put('/:id', verifySession ,async (req, res) => {
+    await db.connect()
 
     const doesntExists = await User.findOne({ id: req.params.id })
     if (!doesntExists) { return res.json({ message: "User not found!" }); }
@@ -65,10 +60,10 @@ users.put('/:id', async (req, res) => {
     if (updatedUser) return res.json({ message: "User registered." });
     return res.json({ message: "Could not update the user." })
 
-
+    await db.disconnect();
 });
 
-users.delete('/:id', async (req, res) => {
+users.delete('/:id', verifySession, async (req, res) => {
     db.connect()
 
     const doesntExists = await User.findOne({ id: req.params.id })
