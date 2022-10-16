@@ -9,8 +9,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ThrashIcon from '@mui/icons-material/Delete';
 import { red } from '@mui/material/colors';
 import AppContext from '../Context/AppContext';
-import Delete from '@mui/icons-material/Delete';
-import { DeleteRecipe } from '../func/recipeFunc';
 
 
 

@@ -11,11 +11,11 @@ services:
       DB_USER: loddrik
       DB_PASS: 1234
       SECRET: Th1s1ssup3rs3cr3t
-  # front:
-  #   build: ./recipe-app-1
-  #   ports:
-  #     - 3000:80
-  #   volumes:
-  #     - ./recipe-app-1:/app
-  #   depends_on:
-  #     - api
+  front:
+    build: ./recipe-app-1
+    ports:
+      - 3000:80
+    volumes:
+      - ./recipe-app-1:/app
+    depends_on:
+      - api
