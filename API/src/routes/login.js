@@ -7,7 +7,7 @@ const User = require('../models/User');
 
 const login = express.Router()
 
-login.post("/login", async (req, res) => {
+login.post("/", async (req, res) => {
     await db.connect();
 
     const { email, password } = req.body;
