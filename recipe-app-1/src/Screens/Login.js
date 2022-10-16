@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom'
 import AppContext from '../Context/AppContext';
-import { useCookies } from 'react-cookie';
+
 
 
 function Copyright(props) {
@@ -37,9 +37,7 @@ const theme = createTheme();
 export default function Login() {
 
     const history = useNavigate();
-    const { setUser } = React.useContext(AppContext)
-    const [cookies, setCookie] = useCookies(['session-token']);
-
+    const { setUser, setCookie } = React.useContext(AppContext)
     const [error, setError] = React.useState(false)
 
     const handleSubmit = async (event) => {
@@ -69,13 +67,14 @@ export default function Login() {
         setCookie('session-token', body["jwt"] )
 
 
+        history('/home')
             //     if (data.length > 0) {
             //         if (data[0].password === password) {
             //             setUser({
             //                 ...data[0],
             //                 authenticated: true
             //             })
-            //             history('/home')
+            
             //         }
             //         else {
             //             setError(true)
