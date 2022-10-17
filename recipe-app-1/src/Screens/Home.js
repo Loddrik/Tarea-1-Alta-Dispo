@@ -15,6 +15,7 @@ const Home = () => {
     const [loading, setLoading] = React.useState(true)
 
     const fetch_products = async () => {
+        setLoading(true)
         await fetch('http://localhost:3001/recipe/', {
             method: 'GET',
             headers: {

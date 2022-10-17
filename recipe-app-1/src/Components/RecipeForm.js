@@ -8,11 +8,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import AppContext from '../Context/AppContext';
+import CircularIndeterminate from './CircularIndeterminate';
 
 
 export default function RecipeForm(props) {
 
     const [form_data, setForm_data] = React.useState({})
+    const [loading, setLoading] = React.useState(false)
     const { cookie } = React.useContext(AppContext);
     const history = useNavigate();
     const handleClose = () => {
@@ -21,6 +23,7 @@ export default function RecipeForm(props) {
 
     const handleAddRecipe = async () => {
         console.log(cookie);
+        setLoading(true);
         await fetch('http://localhost:3001/recipe/', {
             method: 'POST',
             headers: {
@@ -35,6 +38,7 @@ export default function RecipeForm(props) {
                 console.log(json)
                 handleClose()
                 props.fetch_products()
+                setLoading(false)
                 return history('/home')
             })
 
@@ -43,6 +47,7 @@ export default function RecipeForm(props) {
 
     return (
         <div>
+
             <Dialog open={props.open} onClose={handleClose}>
                 <DialogTitle>Nueva receta</DialogTitle>
                 <DialogContent>
@@ -78,6 +83,7 @@ export default function RecipeForm(props) {
                     <Button variant='contained' color='success' onClick={handleAddRecipe}>Añadir</Button>
                 </DialogActions>
             </Dialog>
+
         </div>
     );
 }
